@@ -21,5 +21,9 @@ public class frameRate : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Alpha3)) {
 			SceneManager.LoadScene ("scene3");
 		}
-	}
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SceneManager.LoadScene ("scene 4");
+        }
+    }
 }
