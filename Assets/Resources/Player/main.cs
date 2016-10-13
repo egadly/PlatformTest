@@ -4,26 +4,50 @@ using System.Collections;
 public class main : MonoBehaviour {
 
     public Vector3 pos;
+	private Vector3 checkpoint;
     public Vector3 vel;
 	public Vector3 scale;
 	public bool grounded;
+	public float grav;
+	public int health;
 	public Vector3 feetCheck;
 	public Vector3 feetCheckb;
 	public Vector3 sCheck;
 	public Vector3 sCheckb;
 	public int invCounter = 0;
+	public int frameCount = 0;
 	public bool evenFrame = true;
+	private Animator animator;
+	private AudioSource[] aSources;
+	private AudioSource landingSound;
+	private AudioSource jumpingSound;
+	private camera camera;
+	private Rigidbody2D rigidBody;
 
 	// Use this for initialization
 	void Start () {
         pos = transform.position;
+		checkpoint = pos;
         vel.y -= .01f;
+		health = 3;
+		grav = .25f;
+		animator = gameObject.GetComponent<Animator>();
+		aSources = gameObject.GetComponents<AudioSource>();
+		landingSound = aSources [0];
+		jumpingSound = aSources [1];
+		camera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<camera>();
+		rigidBody = gameObject.GetComponent<Rigidbody2D> ();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		rigidBody.WakeUp ();
+		
 		SpriteRenderer renderer = gameObject.GetComponent ("SpriteRenderer") as SpriteRenderer;
 		renderer.color = new Color (255, 255, 255);
+		frameCount++;
 		if (evenFrame)
 			evenFrame = false;
 		else
@@ -37,6 +61,7 @@ public class main : MonoBehaviour {
 
 		if (grounded && Input.GetKeyDown (KeyCode.Space)) {
 			vel.y = 8;
+			jumpingSound.Play ();
 		}
 		if (Input.GetKey (KeyCode.RightArrow)) {
 			if (grounded) {
@@ -74,6 +99,7 @@ public class main : MonoBehaviour {
 				vel.x = 0;
 				pos.x = check.collider.gameObject.transform.position.x + 13f;
 				if (!grounded && Input.GetKeyDown (KeyCode.Space)) {
+					jumpingSound.Play ();
 					scale.x = 100;
 					vel.y = 4f;
 					vel.x = 3f;
@@ -95,6 +121,7 @@ public class main : MonoBehaviour {
 					scale.x = -100;
 					vel.y = 4f;
 					vel.x = -3f;
+					jumpingSound.Play ();
 				}
 			}
 		}
@@ -106,19 +133,21 @@ public class main : MonoBehaviour {
 	    check = Physics2D.Linecast(feetCheck,feetCheckb);
 
 		if (!check) {
-			Debug.Log("FUCK", this);
 			grounded = false;
 		} else {
-			grounded = false;
 			if (check.collider.gameObject.tag == "Tile") {
-				grounded = true;
+				if (!grounded) {
+					grounded = true;
+					if (vel.y <= -3)
+						landingSound.Play ();
+				}
 				vel.y = 0;
 				pos.y = check.collider.gameObject.transform.position.y + 16f;
 			}
 		}
 
 		if (!grounded)
-			vel.y -= .25f;
+			vel.y -= grav;
 
 		feetCheck = pos;
 		feetCheck.y += 8.01f;
@@ -133,6 +162,10 @@ public class main : MonoBehaviour {
 			}
 		}
 
+		if (grounded && (vel.x > 0.5f || vel.x < -0.5f)) {
+			animator.SetBool ("isRunning", true);
+		} else
+			animator.SetBool ("isRunning", false);
 
 		transform.localScale = scale;
 		Vector3 intPos = pos;
@@ -145,15 +178,25 @@ public class main : MonoBehaviour {
 
     void OnTriggerStay2D(Collider2D collider)
     {
-		if (collider.gameObject.tag == "Hazard" && invCounter==0){
-			vel.y = 4f;
-			if (collider.gameObject.transform.position.x >= this.pos.x)
-				vel.x = -3f;
-			else
-				vel.x = 3f;
-			invCounter = 60;
-			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<camera> ().shakeCounter = 10;
-        }
+		if (collider.gameObject.tag == "Hazard" && invCounter == 0) {
+			health--;
+			if (health == 0) {
+				pos = checkpoint;
+				health = 3;
+				jumpingSound.Play ();
+				vel = Vector3.zero;
+				invCounter = 60;
+			} else {
+				vel.y = 4f;
+				if (collider.gameObject.transform.position.x >= this.pos.x)
+					vel.x = -3f;
+				else
+					vel.x = 3f;
+				invCounter = 60;
+				jumpingSound.Play ();
+				camera.shakeCounter = 10;
+			}
+		}
     }
 
     
