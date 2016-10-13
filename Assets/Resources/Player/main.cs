@@ -59,18 +59,18 @@ public class main : MonoBehaviour {
 		}
 		scale = transform.localScale;
 
-		if (grounded && Input.GetKeyDown (KeyCode.Space)) {
+		if (grounded && virtualKey.jumpPos) {
 			vel.y = 8;
 			jumpingSound.Play ();
 		}
-		if (Input.GetKey (KeyCode.RightArrow)) {
+		if (virtualKey.rightDown) {
 			if (grounded) {
 				vel.x += 2;
 				scale.x = 100;
 			} else
 				vel.x += 3/0.96f - 3;
 		}
-		if (Input.GetKey (KeyCode.LeftArrow)) {
+		if (virtualKey.leftDown) {
 			if (grounded) {
 				vel.x -= 2;
 				scale.x = -100;
@@ -98,7 +98,7 @@ public class main : MonoBehaviour {
 			if (check.collider.gameObject.tag == "Tile") {
 				vel.x = 0;
 				pos.x = check.collider.gameObject.transform.position.x + 13f;
-				if (!grounded && Input.GetKeyDown (KeyCode.Space)) {
+				if (!grounded && virtualKey.jumpDown) {
 					jumpingSound.Play ();
 					scale.x = 100;
 					vel.y = 4f;
@@ -117,7 +117,7 @@ public class main : MonoBehaviour {
 			if (check.collider.gameObject.tag == "Tile") {
 				vel.x = 0;
 				pos.x = check.collider.gameObject.transform.position.x - 13f;
-				if (!grounded && Input.GetKeyDown (KeyCode.Space)) {
+				if (!grounded && virtualKey.jumpPos ) {
 					scale.x = -100;
 					vel.y = 4f;
 					vel.x = -3f;
