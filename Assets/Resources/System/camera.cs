@@ -13,7 +13,6 @@ public class camera : MonoBehaviour {
 	void Start () {
 		shakeCounter = 0;
 		GetComponent<Camera> ().aspect = 16f / 9f;
-		GetComponent<Camera> ().orthographicSize = 180;
 		follow = GameObject.FindGameObjectWithTag ("Player");
 	}
 	
