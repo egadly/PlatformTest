@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class MusicManager : MonoBehaviour {
-
+    UIManager UI;
 	// Use this for initialization
 	void Start () {
 	
