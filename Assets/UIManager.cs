@@ -16,12 +16,12 @@ public class UIManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        pausePress();
+        pausePress();	
 	}
 
     public void pausePress()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+		if (Input.GetKeyDown(KeyCode.Escape))
         {
             GM.togglePauseMenu();
         }

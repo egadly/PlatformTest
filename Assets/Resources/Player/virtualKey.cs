@@ -97,6 +97,5 @@ public class virtualKey : MonoBehaviour {
 			pollIndex = 0;
 		}
 
-
 	}
 }

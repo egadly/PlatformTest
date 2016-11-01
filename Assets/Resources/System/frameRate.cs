@@ -12,7 +12,6 @@ public class frameRate : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Input.GetKeyDown(KeyCode.Escape) ) Application.Quit();
 		if (Input.GetKeyDown (KeyCode.Alpha1))
 			SceneManager.LoadScene ("scene");
 		if (Input.GetKeyDown (KeyCode.Alpha2)) {
@@ -25,5 +24,9 @@ public class frameRate : MonoBehaviour {
         {
             SceneManager.LoadScene ("scene 4");
         }
+		if (Input.GetKeyDown(KeyCode.Alpha5))
+		{
+			SceneManager.LoadScene ("scene5");
+		}
     }
 }
