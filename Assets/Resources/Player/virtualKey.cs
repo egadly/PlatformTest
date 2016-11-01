@@ -22,6 +22,18 @@ public class virtualKey : MonoBehaviour {
 	public int pollBuffer = 0;
 	public int pollIndex = 0;
 
+/////////////Added code/////////////////////////
+    public int downButton;
+    public static bool downDown;
+    public static bool downPos;
+    public static bool downNeg;
+
+    public int enterButton;
+    public static bool enterDown;
+    public static bool enterPos;
+    public static bool enterNeg;
+///////////////////////////////////////////////
+
 	// Use this for initialization
 	void Start () {
 		cur_vKeys = new bool[509];
@@ -29,6 +41,12 @@ public class virtualKey : MonoBehaviour {
 		jumpButton = 106;
 		rightButton = 100;
 		leftButton = 97;
+
+        //"S" key, used on the door to complete the level///////
+        downButton = 115;
+
+        //Enter key, used to skip clicking continue button with mouse///
+        enterButton = 13;
 		
 	}
 	
@@ -53,6 +71,11 @@ public class virtualKey : MonoBehaviour {
 								rightButton = i;
 							if (pollIndex == 2)
 								leftButton = i;
+            ///////////////////added code///////////////////////////////////
+                            if (pollIndex == 3)
+                                downButton = i;
+                            if (pollIndex == 4)
+                                enterButton = i;
 							break;
 						}
 					}
@@ -89,7 +112,30 @@ public class virtualKey : MonoBehaviour {
 			} else {
 				leftNeg = leftPos = false;
 			}
-		}
+
+///////////////////////////Added code//////////////////////////////////////////////
+            downDown = cur_vKeys[downButton];
+            if (prev_vKeys[downButton] != cur_vKeys[downButton])
+            {
+                downNeg = prev_vKeys[downButton];
+                downPos = cur_vKeys[downButton];
+            }
+            else
+            {
+                downNeg = downPos = false;
+            }
+
+            enterDown = cur_vKeys[enterButton];
+            if (prev_vKeys[enterButton] != cur_vKeys[enterButton])
+            {
+                enterNeg = prev_vKeys[enterButton];
+                enterPos = cur_vKeys[enterButton];
+            }
+            else
+            {
+                downNeg = downPos = false;
+            }
+        }
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			polling = true;
